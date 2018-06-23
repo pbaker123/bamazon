@@ -1,0 +1,25 @@
+{
+  "name": "bamazon",
+  "version": "1.0.0",
+  "description": "Shopping Node Project",
+  "main": "bamazonCustomer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pbaker123/bamazon.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pbaker123/bamazon/issues"
+  },
+  "homepage": "https://github.com/pbaker123/bamazon#readme",
+  "dependencies": {
+    "cliui": "^4.1.0",
+    "inquirer": "^6.0.0",
+    "mysql": "^2.15.0"
+  }
+}
