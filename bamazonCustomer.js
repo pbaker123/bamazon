@@ -24,7 +24,7 @@ function reset() {
 
 function getStock() {
 	reset()
-	connection.query("SELECT * FROM products WHERE stock_quantity > 0", process.argv[3], function(err, res) {
+	connection.query("SELECT * FROM products WHERE stock_quantity > 0", function(err, res) {
 	    if (err) throw err;
 	    printStock(res)
   	});
@@ -37,6 +37,7 @@ function printStock(res) {
 		{text: "Product Name",width: 50},
 		{text: "Price",align: "right"}
 	)
+	ui.div({text: "-------------------------------------------------------------------------------"})
 	for (var i = 0; i < res.length; i++) {
 		stock.push(res[i].product_name)
 		ui.div(
@@ -69,7 +70,6 @@ function invoice(res, data) {
 		})
 	} else {
 		total(selectedItem, data.quantityPurchase)
-		
 	}
 }
 
@@ -80,14 +80,15 @@ function closeConnection() {
 function total(selectedItem, quantityPurchase) {
 	reset()
 	var newQuantity = selectedItem.stock_quantity - quantityPurchase;
+	var price = (quantityPurchase * selectedItem.price).toFixed(2);
+	var totalSales = selectedItem.product_sales + parseFloat(price);
 	connection.query(
-	    "UPDATE products SET ? WHERE ?",[{stock_quantity: newQuantity},{item_id: selectedItem.item_id}], function(error) {
+	    "UPDATE products SET ? WHERE ?",[{stock_quantity: newQuantity,product_sales: totalSales},{item_id: selectedItem.item_id}], function(error) {
 	      if (error) throw err;
-	      var price = (quantityPurchase * selectedItem.price).toFixed(2);
-	      console.log("Congratulations, your purchase is approved.  Your account has been debited $" + price);
+	      console.log("\nCongratulations, your purchase is approved.  \n\nYour account has been debited $" + price + "\n");
 	      buyAgain()
 	    }
-	  );
+	);
 }
 
 function buyAgain() {
@@ -99,28 +100,6 @@ function buyAgain() {
 		}
 	})
 }
-
-function printTableExample() {
-	ui.div(
-	  {
-	    text: "-f, --file",
-	    width: 20,
-	    padding: [0, 4, 0, 4]
-	  },
-	  {
-	    text: "the file to load. (if this description is long it wraps)."
-	    ,
-	    width: 20
-	  },
-	  {
-	    text: "[required]",
-	    align: 'right'
-	  }
-	)
-	 
-	console.log(ui.toString())
-}
-
 connection.connect(function (err) {
   if (err) throw err;
   getStock()
